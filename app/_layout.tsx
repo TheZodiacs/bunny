@@ -14,6 +14,8 @@ import { SQLiteProvider } from 'expo-sqlite';
 import { migrate } from 'drizzle-orm/expo-sqlite/migrator';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import migrations from '../drizzle/migrations';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { seedDatabase } from '@/lib/seed';
 
 const queryClient = new QueryClient();
 
@@ -53,24 +55,30 @@ function AppLayout() {
 
 export default function RootLayout() {
   return (
-    // The Suspense boundary will show the fallback while the database is initializing
-    <Suspense fallback={<DatabaseLoading />}>
-      <SQLiteProvider
-        databaseName='app.db'
-        onInit={async (db) => {
-          console.log('🚀 Initializing and migrating database...');
-          try {
-            await migrate(drizzle(db), migrations);
-            console.log('✅ Database migrated successfully');
-          } catch (error) {
-            console.error('❌ Database migration failed', error);
-          }
-        }}
-        // useSuspense is key to making this work with React Suspense
-        useSuspense
-      >
-        <AppLayout />
-      </SQLiteProvider>
-    </Suspense>
+    <SafeAreaProvider>
+      {/* The Suspense boundary will show the fallback while the database is initializing */}
+      <Suspense fallback={<DatabaseLoading />}>
+        <SQLiteProvider
+          databaseName='app.db'
+          onInit={async (db) => {
+            console.log('🚀 Initializing and migrating database...');
+            try {
+              await migrate(drizzle(db), migrations);
+              console.log('✅ Database migrated successfully');
+              
+              // // Seed with sample data
+              // await seedDatabase(db);
+              // console.log('✅ Database seeded successfully');
+            } catch (error) {
+              console.error('❌ Database initialization failed', error);
+            }
+          }}
+          // useSuspense is key to making this work with React Suspense
+          useSuspense
+        >
+          <AppLayout />
+        </SQLiteProvider>
+      </Suspense>
+    </SafeAreaProvider>
   );
 }
