@@ -9,13 +9,15 @@ interface ProgressSliderProps {
     totalUnits: number
     progressUnit: string
     onChange: (value: number) => void
+    label?: string
 }
 
 export function ProgressSlider({ 
     currentProgress, 
     totalUnits, 
     progressUnit, 
-    onChange 
+    onChange,
+    label = "Current Progress"
 }: ProgressSliderProps) {
     const percent = totalUnits > 0 ? Math.round((currentProgress / totalUnits) * 100) : 0
 
@@ -32,7 +34,7 @@ export function ProgressSlider({
     return (
         <View className="mb-3">
             <View className="flex-row justify-between items-center mb-2">
-                <UIText className="text-sm">Current Progress</UIText>
+                <UIText className="text-sm">{label}</UIText>
                 <UIText className="text-sm font-medium">
                     {currentProgress}/{totalUnits} {progressUnit}
                 </UIText>

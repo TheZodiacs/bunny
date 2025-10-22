@@ -2,7 +2,7 @@
 import React from "react"
 import { View, TouchableOpacity } from "react-native"
 import { Text as UIText } from '@/components/ui/text'
-import { StatusType } from './FormTypes'
+import { StatusType } from '../types/FormTypes'
 
 interface StatusSelectorProps {
     value: StatusType

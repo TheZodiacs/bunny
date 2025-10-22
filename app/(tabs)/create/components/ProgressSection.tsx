@@ -1,13 +1,12 @@
-
 // ProgressSection.tsx
 import React from "react"
 import { View } from "react-native"
 import { Controller, Control } from "react-hook-form"
 import { Text as UIText } from '@/components/ui/text'
 import { Input } from '@/components/ui/input'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, type Option } from "@/components/ui/select"
 import { ProgressSlider } from './ProgressSlider'
-import { FormData, PartType, ProgressUnit, StatusType } from './FormTypes'
+import { FormData, PartType, ProgressUnit, StatusType } from '../types/FormTypes'
 
 interface ProgressSectionProps {
     control: Control<FormData>
@@ -15,17 +14,23 @@ interface ProgressSectionProps {
     totalUnits: number
     currentProgress: number
     progressUnit: ProgressUnit
+    currentPart: number
+    totalParts: number
+    partType: PartType
 }
 
-const PART_TYPE_OPTIONS: PartType[] = ["season", "volume", "arc", "part"]
-const PROGRESS_UNIT_OPTIONS: ProgressUnit[] = ["episodes", "chapters", "pages"]
+const PART_TYPE_OPTIONS: PartType[] = ["Season", "Volume", "Arc", "Part"]
+const PROGRESS_UNIT_OPTIONS: ProgressUnit[] = ["Episodes", "Chapters", "Pages"]
 
-export function ProgressSection({ 
-    control, 
-    status, 
-    totalUnits, 
-    currentProgress, 
-    progressUnit 
+export function ProgressSection({
+    control,
+    status,
+    totalUnits,
+    currentProgress,
+    progressUnit,
+    currentPart,
+    totalParts,
+    partType
 }: ProgressSectionProps) {
     const showProgress = status !== "completed" && status !== "planned"
 
@@ -38,11 +43,11 @@ export function ProgressSection({
                 <View className="flex-row gap-3 mb-3">
                     <Controller
                         control={control}
-                        name="partNumber"
+                        name="totalParts"
                         render={({ field: { onChange, value } }) => (
                             <View className="flex-1">
                                 <UIText className="text-xs text-muted-foreground mb-1">
-                                    Part Number
+                                    Total Parts
                                 </UIText>
                                 <Input
                                     value={String(value ?? 1)}
@@ -56,20 +61,26 @@ export function ProgressSection({
                     <Controller
                         control={control}
                         name="partType"
-                        render={({ field: { onChange } }) => (
+                        render={({ field: { onChange, value } }) => (
                             <View className="flex-1">
                                 <UIText className="text-xs text-muted-foreground mb-1">
                                     Part Type
                                 </UIText>
                                 <View className="border border-border rounded-md overflow-hidden bg-background">
-                                    <Select onValueChange={onChange} className="w-full">
+                                    <Select
+                                        onValueChange={(option) => {
+                                            if (option) onChange(option.value as PartType);
+                                        }}
+                                        value={value ? { value: String(value), label: String(value) } : undefined}
+                                        className="w-full"
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select type" />
                                         </SelectTrigger>
                                         <SelectContent className="w-[calc(41%)]">
                                             {PART_TYPE_OPTIONS.map((type) => (
                                                 <SelectItem label={type} key={type} value={type}>
-                                                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                                                    {type}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -82,12 +93,13 @@ export function ProgressSection({
                 {showProgress && (
                     <Controller
                         control={control}
-                        name="partNumber"
+                        name="currentPart"
                         render={({ field: { onChange, value } }) => (
                             <ProgressSlider
-                                currentProgress={Number(value ?? 0)}
-                                totalUnits={partNumber}
-                                progressUnit={progressUnit}
+                                currentProgress={currentPart}
+                                totalUnits={totalParts}
+                                progressUnit={partType}
+                                label="Current Part"
                                 onChange={onChange}
                             />
                         )}
@@ -116,24 +128,29 @@ export function ProgressSection({
                         )}
                     />
 
+
                     <Controller
                         control={control}
                         name="progressUnit"
-                        render={({ field: { onChange } }) => (
+                        render={({ field: { onChange, value } }) => (
                             <View className="flex-1">
                                 <UIText className="text-xs text-muted-foreground mb-1">
-                                    Unit Type
+                                    Progress Unit
                                 </UIText>
                                 <View className="border border-border rounded-md overflow-hidden bg-background">
-                                    <Select onValueChange={onChange} className="w-full">
+                                    <Select
+                                        onValueChange={(option) => {
+                                            if (option) onChange(option.value as ProgressUnit);
+                                        }}
+                                        value={value ? { value: String(value), label: String(value) } : undefined}
+                                        className="w-full"
+                                    >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select unit" />
                                         </SelectTrigger>
                                         <SelectContent className="w-[calc(41%)]">
                                             {PROGRESS_UNIT_OPTIONS.map((unit) => (
-                                                <SelectItem label={unit} key={unit} value={unit}>
-                                                    {unit.charAt(0).toUpperCase() + unit.slice(1)}
-                                                </SelectItem>
+                                                <SelectItem label={unit} key={unit} value={unit} />
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -150,7 +167,7 @@ export function ProgressSection({
                         name="currentProgress"
                         render={({ field: { onChange, value } }) => (
                             <ProgressSlider
-                                currentProgress={Number(value ?? 0)}
+                                currentProgress={currentProgress}
                                 totalUnits={totalUnits}
                                 progressUnit={progressUnit}
                                 onChange={onChange}

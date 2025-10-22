@@ -20,6 +20,8 @@ export const entries = sqliteTable("entries", {
   // Basic Info
   title: text("title").notNull(),
   coverImageUrl: text("coverImageUrl"),
+  //blur background image URL
+  coverImageBlurUrl: text("coverImageBlurUrl"),
   description: text("description"),
   genres: text("genres", { mode: 'json' }).$type<string[]>(), // JSON array
   releaseYear: integer("releaseYear"),
@@ -29,7 +31,6 @@ export const entries = sqliteTable("entries", {
   status: text("status", { enum: ['current', 'planned', 'completed', 'dropped', 'hold'] }).notNull(),
   
   // User Ratings & Notes
-  userRating: real("userRating"), // DB-level CHECKs (>= 0, <= 5) would be added in a custom migration if needed
   tier: text("tier", { enum: ['S', 'A', 'B', 'C', 'D', 'E'] }),
   isFavorite: integer("isFavorite", { mode: 'boolean' }).default(false),
   notes: text("notes"),
@@ -53,9 +54,9 @@ export const entries = sqliteTable("entries", {
 export const entryParts = sqliteTable("entry_parts", {
   partId: text("partId").primaryKey(),
   entryId: text("entryId").notNull().references(() => entries.entryId, { onDelete: 'cascade' }),
-  partNumber: integer("partNumber").notNull(), // Season 1, Volume 2
+  currentPart: integer("currentPart", { mode: 'number' }).default(0),
+  totalParts: integer("totalParts").notNull(), // Season 1, Volume 2
   partType: text("partType", { enum: ['season', 'volume', 'arc', 'part'] }).notNull(),
-  title: text("title"), // Optional: "Final Season", "Shibuya Arc"
   
   // Progress within this part
   currentProgress: integer("currentProgress").default(0),
@@ -72,5 +73,4 @@ export const entryParts = sqliteTable("entry_parts", {
 }, (table) => ({
   // Indexes and Unique Constraints
   entryIdx: index("idx_entry_parts_entry").on(table.entryId),
-  uniquePart: unique("unique_entry_part").on(table.entryId, table.partNumber, table.partType),
 }));
