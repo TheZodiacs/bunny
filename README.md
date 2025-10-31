@@ -1,73 +1,52 @@
-# Minimal Template
+# Bunny App
 
-This is a [React Native](https://reactnative.dev/) project built with [Expo](https://expo.dev/) and [React Native Reusables](https://reactnativereusables.com).
+Bunny is a privacy-first, local binge tracker for all forms of content like anime, manga, novels, movies, and shows.
 
-It was initialized using the following command:
+## Features
 
-```bash
-npx @react-native-reusables/cli@latest init -t bunny
-```
+- **Quick Track**: Easily track your progress on your favorite content.
+- **Discover**: Find new content to enjoy.
+- **Timeline**: See your binge-watching history in a timeline view.
+- **Cloud Backup**: Backup your data to the cloud.
+- **Privacy First**: Your data is stored locally on your device.
 
 ## Getting Started
 
 To run the development server:
 
 ```bash
-    npm run dev
-    # or
-    yarn dev
-    # or
-    pnpm dev
-    # or
-    bun dev
+pnpm dev
 ```
 
-This will start the Expo Dev Server. Open the app in:
+This will start the Expo Dev Server. You can then open the app in:
 
 - **iOS**: press `i` to launch in the iOS simulator _(Mac only)_
 - **Android**: press `a` to launch in the Android emulator
 - **Web**: press `w` to run in a browser
 
-You can also scan the QR code using the [Expo Go](https://expo.dev/go) app on your device. This project fully supports running in Expo Go for quick testing on physical devices.
+You can also scan the QR code using the [Expo Go](https://expo.dev/go) app on your device.
 
-## Adding components
+## Project Structure
 
-You can add more reusable components using the CLI:
+- `app/`: Contains the application screens and navigation logic, powered by [Expo Router](https://expo.dev/router).
+- `components/`: Shared UI components.
+- `assets/`: Static assets like images and fonts.
+- `lib/`: Utility functions and libraries.
+- `package.json`: Project dependencies and scripts.
 
-```bash
-npx react-native-reusables/cli@latest add [...components]
-```
+## Tech Stack
 
-> e.g. `npx react-native-reusables/cli@latest add input textarea`
+- **React Native & Expo**: Cross-platform development for iOS, Android, and Web.
+- **Expo Router**: File-based routing for React Native.
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development via [Nativewind](https://www.nativewind.dev/).
+- **TypeScript**: Statically typed JavaScript for better code quality.
+- **Drizzle ORM**: TypeScript ORM for your database.
 
-If you don't specify any component names, you'll be prompted to select which components to add interactively. Use the `--all` flag to install all available components at once.
+## Scripts
 
-## Project Features
-
-- ⚛️ Built with [Expo Router](https://expo.dev/router)
-- 🎨 Styled with [Tailwind CSS](https://tailwindcss.com/) via [Nativewind](https://www.nativewind.dev/)
-- 📦 UI powered by [React Native Reusables](https://github.com/founded-labs/react-native-reusables)
-- 🚀 New Architecture enabled
-- 🔥 Edge to Edge enabled
-- 📱 Runs on iOS, Android, and Web
-
-## Learn More
-
-To dive deeper into the technologies used:
-
-- [React Native Docs](https://reactnative.dev/docs/getting-started)
-- [Expo Docs](https://docs.expo.dev/)
-- [Nativewind Docs](https://www.nativewind.dev/)
-- [React Native Reusables](https://reactnativereusables.com)
-
-## Deploy with EAS
-
-The easiest way to deploy your app is with [Expo Application Services (EAS)](https://expo.dev/eas).
-
-- [EAS Build](https://docs.expo.dev/build/introduction/)
-- [EAS Updates](https://docs.expo.dev/eas-update/introduction/)
-- [EAS Submit](https://docs.expo.dev/submit/introduction/)
-
----
-
-If you enjoy using React Native Reusables, please consider giving it a ⭐ on [GitHub](https://github.com/founded-labs/react-native-reusables). Your support means a lot!
+- `pnpm dev`: Starts the Expo development server.
+- `pnpm android`: Starts the app on a connected Android device or emulator.
+- `pnpm ios`: Starts the app on the iOS simulator.
+- `pnpm web`: Starts the app in a web browser.
+- `pnpm clean`: Removes `node_modules` and the `.expo` directory.
+- `pnpm db:generate`: Generates Drizzle ORM files.
